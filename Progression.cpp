@@ -55,6 +55,36 @@ class geo_iterator {
 		return *_curr;
 	}	
 };
+
+
+class fib_iterator {
+	int curr;
+	int prev;
+	friend class FibProgression;
+	fib_iterator(int prev, int base):curr{base}, prev{prev}{}
+	public:
+	bool operator==(const fib_iterator& other) const{
+		return curr==other.curr;
+	}
+	bool operator!=(const fib_iterator& other) const{
+		return curr<other.curr;
+	}
+	int& operator*(){
+		return curr;
+	}
+	fib_iterator& operator++(){
+		curr+=prev;
+		prev=curr-prev;
+		return *this;
+	}
+
+	fib_iterator& operator++(int){
+		auto _prev=this;
+		++*this;
+		return *_prev;
+	}	
+};
+
 /*
 class Progression{
 	private:
@@ -104,22 +134,71 @@ class GeomProgression{
 		return GeomProgression::iterator(stop,base);
 	}
 };
-/*
-FibonacciProgression{
+
+class FibProgression{
 	long prev;
+	long base;
+	long limit;
 	public:
-	FibonacciProgression();
-	FibonacciProgression( long,long);
-	long nextValue();
-}
-*/
+	FibProgression(long _stop){
+		int i=0;
+		int x=0;
+		for (i;i<_stop;i++){
+			x=base+prev;
+			prev=base;
+			base=x;
+		}
+		prev=0;
+		base=1;
+		limit=i;
+	};
+	FibProgression(long _stop, long _second){
+		int i=0;
+		int x=0;
+		for (i;i<_stop;i++){
+			x=base+prev;
+			prev=base;
+			base=x;
+		}
+		prev=0;
+		base=_second;
+		limit=i;
+	};
+	FibProgression(long _stop, long _first, long _second){
+		int i=0;
+		int x=0;
+		for (i;i<_stop;i++){
+			x=base+prev;
+			prev=base;
+			base=x;
+		}
+		prev=_first;
+		base=_second;
+		limit=i;
+	};
+
+	using iterator = fib_iterator;
+
+	iterator begin() const{
+		cout<<prev<<" "<<base<<std::endl;
+		return FibProgression::iterator(prev,base);
+	}
+	iterator end() const{
+		return FibProgression::iterator(limit,limit);
+	}
+};
 
 int main(){
+	std::cout<<"Aritmetica"<<std::endl;
 	for (auto i: ArithProgression{10})
 		std::cout<<i<<",";
-	std::cout<<std::endl;
+	std::cout<<std::endl<<"Geometrica"<<std::endl;
 	for (auto i: GeomProgression{2,100,4})
 		std::cout<<i<<",";
+	std::cout<<std::endl<<"Fibonacci"<<std::endl;
+	for (auto i: FibProgression{100,5,9}){
+		std::cout<<i<<",";
+	}
 	std::cout<<std::endl;
 	return 0;
 }
